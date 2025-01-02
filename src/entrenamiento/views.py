@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from datetime import timedelta
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -92,6 +93,22 @@ class EntrenamientoViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(entrenamiento, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'], url_path='resumen-entrenamientos')
+    def resumen_entrenamientos(self, request):
+        ejercicios_realizados = EjercicioRealizado.objects.filter(
+            entrenamiento__usuario=request.user
+        ).select_related('ejercicio').order_by('-id')[:15]
+
+        summary = []
+        for er in ejercicios_realizados:
+            summary.append({
+                'ejercicioId': er.ejercicio.id if er.ejercicio else None,
+                'ejercicioNombre': er.ejercicio.nombre if er.ejercicio else 'Sin nombre',
+                'fecha': er.entrenamiento.inicio,
+            })
+
+        return Response({'summary': summary}, status=status.HTTP_200_OK)
 
 class EjercicioRealizadoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

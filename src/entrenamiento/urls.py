@@ -11,4 +11,5 @@ router.register(r'series-realizadas', SerieRealizadaViewSet, basename='serie-rea
 urlpatterns = [
     path('', include(router.urls)),
     path('series-realizadas/', views.SerieRealizadaCreateAPIView.as_view(), name='series-realizadas-create'),
+    path('entrenamientos/resumen-entrenamientos/', views.EntrenamientoViewSet.as_view({'get': 'resumen_entrenamientos'}), name='resumen-entrenamientos'),
 ]

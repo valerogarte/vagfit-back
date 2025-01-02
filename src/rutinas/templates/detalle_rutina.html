@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Rutina</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2b6777;
+            font-size: 2.2em;
+        }
+
+        .rutina-descripcion {
+            text-align: center;
+            color: #555;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .sesion {
+            background-color: #e9ecef;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sesion h3 {
+            margin-bottom: 10px;
+            color: #2b6777;
+        }
+
+        .ejercicio {
+            margin-left: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ejercicio h4 {
+            margin: 0 0 5px 0;
+            color: #3d3d3d;
+        }
+
+        .ejercicio img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .series {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+
+        .series li {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* General buttons */
+        .button-back {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .button-back a {
+            padding: 10px 20px;
+            background-color: #2b6777;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+
+        .button-back a:hover {
+            background-color: #1f4f5d;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Detalle de la Rutina: {{ rutina.titulo }}</h1>
+
+        <!-- Descripción de la rutina -->
+        {% if rutina.descripcion %}
+        <p class="rutina-descripcion">{{ rutina.descripcion }}</p>
+        {% endif %}
+
+        <!-- Sesiones asociadas a la rutina -->
+        <div class="rutina">
+            <h2>Sesiones</h2>
+
+            {% for sesion in sesiones %}
+            <div class="sesion">
+                <h3>{{ sesion.titulo }}</h3>
+
+                <!-- Ejercicios personalizados en la sesión -->
+                <div class="ejercicios">
+                    {% for ejercicio_personalizado in sesion.ejercicios_personalizados %}
+                    <div class="ejercicio">
+                        <!-- Imagenes del ejercicio, alternando imagen1 e imagen2 -->
+                        <div class="ejercicio-imagen"
+                            data-imagen1="{% if ejercicio_personalizado.ejercicio.imagen_uno %}{{ ejercicio_personalizado.ejercicio.imagen_uno.url }}{% endif %}"
+                            data-imagen2="{% if ejercicio_personalizado.ejercicio.imagen_dos %}{{ ejercicio_personalizado.ejercicio.imagen_dos.url }}{% endif %}">
+                            <img src="{% if ejercicio_personalizado.ejercicio.imagen_uno %}{{ ejercicio_personalizado.ejercicio.imagen_uno.url }}{% endif %}"
+                                alt="Imagen de {{ ejercicio_personalizado.ejercicio.nombre }}">
+                        </div>
+
+                        <div>
+                            <h4>Ejercicio: {{ ejercicio_personalizado.ejercicio.nombre }}</h4>
+
+                            <!-- Series asociadas a este ejercicio personalizado -->
+                            <ul class="series">
+                                {% for serie in ejercicio_personalizado.series %}
+                                <li>Repeticiones: {{ serie.repeticiones }} - Duración: {{ serie.duracion_minutos }}
+                                    minutos</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Botón para regresar -->
+        <div class="button-back">
+            <a href="{% url 'lista_rutinas' %}">Volver a la lista de rutinas</a>
+        </div>
+    </div>
+
+    <!-- JavaScript para alternar las imágenes -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ejercicios = document.querySelectorAll(".ejercicio-imagen");
+
+            ejercicios.forEach(ejercicio => {
+                const imgElement = ejercicio.querySelector("img");
+                const imagen1 = ejercicio.getAttribute("data-imagen1");
+                const imagen2 = ejercicio.getAttribute("data-imagen2");
+
+                if (imagen1 && imagen2) {
+                    let currentImage = imagen1;
+
+                    setInterval(() => {
+                        currentImage = currentImage === imagen1 ? imagen2 : imagen1;
+                        imgElement.src = currentImage;
+                    }, 2000); // Cambia la imagen cada 2 segundos
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

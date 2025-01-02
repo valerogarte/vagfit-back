@@ -1,0 +1,8 @@
+<h1>Mis Rutinas</h1>
+<ul>
+    {% for rutina in rutinas %}
+    <li>
+        <a href="{% url 'detalle_rutina' rutina.id %}">{{ rutina.titulo }}</a>
+    </li>
+    {% endfor %}
+</ul>

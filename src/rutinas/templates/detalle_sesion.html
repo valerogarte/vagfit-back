@@ -1,0 +1,8 @@
+<h1>{{ sesion.titulo }}</h1>
+<h2>Ejercicios Personalizados</h2>
+<ul>
+    {% for ejercicio_personalizado in sesion.ejerciciopersonalizado_set.all %}
+    <li>{{ ejercicio_personalizado.ejercicio.nombre }}: {{ ejercicio_personalizado.repeticiones }} repeticiones, {{
+        ejercicio_personalizado.duracion_minutos }} minutos</li>
+    {% endfor %}
+</ul>

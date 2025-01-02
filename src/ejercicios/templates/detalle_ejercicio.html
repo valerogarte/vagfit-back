@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de {{ ejercicio.nombre }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .images {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .images img {
+            max-width: 45%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .category,
+        .instructions,
+        .muscle-info {
+            margin-bottom: 20px;
+        }
+
+        .category span,
+        .muscle-info h2,
+        .instructions p {
+            color: #555;
+        }
+
+        .muscle-info h2 {
+            margin-top: 0;
+            color: #2b6777;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        .button-back {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .button-back a {
+            padding: 10px 20px;
+            background-color: #2b6777;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button-back a:hover {
+            background-color: #1f4f5d;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>{{ ejercicio.nombre }}</h1>
+
+        <!-- Imágenes -->
+        <div class="images">
+            {% if ejercicio.imagen_uno %}
+            <img src="{{ ejercicio.imagen_uno.url }}" alt="{{ ejercicio.nombre }}">
+            {% endif %}
+
+            {% if ejercicio.imagen_dos %}
+            <img src="{{ ejercicio.imagen_dos.url }}" alt="{{ ejercicio.nombre }}">
+            {% endif %}
+        </div>
+
+        <!-- Categoría -->
+        <div class="category">
+            <strong>Categoría:</strong>
+            <span>{{ ejercicio.categoria.titulo }}</span>
+        </div>
+
+        <!-- Instrucciones -->
+        <div class="instructions">
+            <h2>Instrucciones</h2>
+            <p>{{ ejercicio.instrucciones }}</p>
+        </div>
+
+        <!-- Músculo Primario -->
+        <div class="muscle-info">
+            <h2>Músculo Primario</h2>
+            <p>{{ ejercicio.musculo_primario.titulo }}</p>
+        </div>
+
+        <!-- Músculo Secundario -->
+        <div class="muscle-info">
+            <h2>Músculo Secundario</h2>
+            {% if ejercicio.musculo_secundario %}
+            <p>{{ ejercicio.musculo_secundario.titulo }}</p>
+            {% else %}
+            <p>No hay músculo secundario.</p>
+            {% endif %}
+        </div>
+
+        <!-- Botón para volver a la lista -->
+        <div class="button-back">
+            <a href="{% url 'lista_ejercicios' %}">Volver a la lista de ejercicios</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

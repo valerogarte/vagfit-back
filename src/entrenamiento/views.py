@@ -107,6 +107,7 @@ class EntrenamientoViewSet(viewsets.ModelViewSet):
             duracion_str = str(duracion).split('.')[0] if duracion else 'En curso'
             summary.append({
                 'titulo': f'{ent.sesion.titulo if ent.sesion else "Sin título"}',
+                'inicio': ent.inicio.strftime('%Y-%m-%d %H:%M:%S'),  # Add start date
                 'duracion': duracion_str,
                 'tiempo_transcurrido': timesince(ent.inicio),
             })

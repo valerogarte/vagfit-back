@@ -104,9 +104,10 @@ class EntrenamientoViewSet(viewsets.ModelViewSet):
         summary = []
         for ent in entrenamientos:
             duracion = (ent.fin - ent.inicio) if ent.fin else None
+            duracion_str = str(duracion).split('.')[0] if duracion else 'En curso'
             summary.append({
-                'titulo': f'Entrenamiento de {ent.sesion.titulo if ent.sesion else "Sin título"}',
-                'duracion': str(duracion) if duracion else 'En curso',
+                'titulo': f'{ent.sesion.titulo if ent.sesion else "Sin título"}',
+                'duracion': duracion_str,
                 'tiempo_transcurrido': timesince(ent.inicio),
             })
 

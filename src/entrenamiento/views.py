@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import EntrenamientoSerializer, EjercicioRealizadoSerializer, SerieRealizadaSerializer
 from .models import Entrenamiento, EjercicioRealizado, SerieRealizada
 from rutinas.models import Sesion, EjercicioPersonalizado, SeriePersonalizada
+from django.utils.timesince import timesince
 
 class EntrenamientoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -96,16 +97,17 @@ class EntrenamientoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='resumen-entrenamientos')
     def resumen_entrenamientos(self, request):
-        ejercicios_realizados = EjercicioRealizado.objects.filter(
-            entrenamiento__usuario=request.user
-        ).select_related('ejercicio').order_by('-id')[:15]
+        entrenamientos = Entrenamiento.objects.filter(
+            usuario=request.user
+        ).order_by('-inicio')[:15]
 
         summary = []
-        for er in ejercicios_realizados:
+        for ent in entrenamientos:
+            duracion = (ent.fin - ent.inicio) if ent.fin else None
             summary.append({
-                'ejercicioId': er.ejercicio.id if er.ejercicio else None,
-                'ejercicioNombre': er.ejercicio.nombre if er.ejercicio else 'Sin nombre',
-                'fecha': er.entrenamiento.inicio,
+                'titulo': f'Entrenamiento de {ent.sesion.titulo if ent.sesion else "Sin título"}',
+                'duracion': str(duracion) if duracion else 'En curso',
+                'tiempo_transcurrido': timesince(ent.inicio),
             })
 
         return Response({'summary': summary}, status=status.HTTP_200_OK)
